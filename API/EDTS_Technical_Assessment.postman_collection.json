@@ -1,0 +1,471 @@
+{
+	"info": {
+		"_postman_id": "2738f4b5-8971-44a5-ae82-7428a78c2593",
+		"name": "EDTS_Technical_Assessment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "AT01 - Bad request create a new user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"coba\" : \"coba\",\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/users",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AT02 - Create a ne user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 201\", ()=> {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User is Deva Fahrurahman\", ()=> {\r",
+							"    pm.expect(response.firstname).to.eql(\"Deva\");\r",
+							"    pm.expect(response.lastname).to.eql(\"Fahrurahman\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User job is QA\", ()=> {\r",
+							"    pm.expect(response.job).to.eql(\"QA\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\" : \"Deva\",\r\n    \"lastname\" : \"Fahrurahman\",\r\n    \"job\" : \"QA\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/users",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AT03 - Page not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/api/users?page=99",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "99"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AT04 - Get all user paged",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"const users = response[\"data\"].find(item => item.first_name === \"Tobias\");\r",
+							"\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify detail page\", () => {\r",
+							"    pm.expect(response.page).to.eql(2);\r",
+							"    pm.expect(response.per_page).to.eql(6);\r",
+							"    pm.expect(response.total).to.eql(12);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify user Tobias\", () => {\r",
+							"    pm.expect(users.first_name).to.eql(\"Tobias\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/api/users?page=2",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AT05 - Bad request update user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"coba\" : \"coba\",\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/users/2",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AT06 - Update user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify change name to Rapi Ahmad\", () => {\r",
+							"    pm.expect(response.firstname).to.eql(\"Rapi\");\r",
+							"    pm.expect(response.lastname).to.eql(\"Ahmad\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Change job to Youtuber\", () => {\r",
+							"    pm.expect(response.job).to.eql(\"Youtuber\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\" : \"Rapi\",\r\n    \"lastname\" : \"Ahmad\",\r\n    \"job\" : \"Youtuber\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/users/2",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AT07 - View detail single user is not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/api/users/23",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"23"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AT08 - View detail single user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"console.log(response.data.id)\r",
+							"\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify user\", () => {\r",
+							"    pm.expect(response.data.id).to.eql(2);\r",
+							"    pm.expect(response.data.email).to.eql(\"janet.weaver@reqres.in\");\r",
+							"    pm.expect(response.data.first_name).to.eql(\"Janet\");\r",
+							"    pm.expect(response.data.last_name).to.eql(\"Weaver\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/api/users/2",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AT09 - Delete user is not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/api/users/23",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"23"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AT10 - Delete user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", () => {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/api/users/2",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
